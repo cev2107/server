@@ -1889,7 +1889,7 @@ bool Trigger::change_table_name(void* param_arg)
   LEX_STRING *new_table_name= param->new_table_name;
 
   LEX_STRING *def= &definition, new_def;
-  size_t on_q_table_name_len, before_on_len;
+  uint on_q_table_name_len, before_on_len;
   String buff;
 
   thd->variables.sql_mode= sql_mode;
@@ -1906,7 +1906,7 @@ bool Trigger::change_table_name(void* param_arg)
   buff.append(STRING_WITH_LEN("ON "));
   append_identifier(thd, &buff, new_table_name->str, new_table_name->length);
   buff.append(STRING_WITH_LEN(" "));
-  on_q_table_name_len= buff.length() - before_on_len;
+  on_q_table_name_len= (uint)(buff.length() - before_on_len);
   buff.append(on_table_name.str + on_table_name.length,
               def->length - (before_on_len + on_table_name.length));
   /*
@@ -2052,8 +2052,8 @@ bool Table_triggers_list::change_table_name(THD *thd, const char *db,
       result= 1;
       goto end;
     }
-    LEX_STRING old_table_name= { (char *) old_alias, strlen(old_alias) };
-    LEX_STRING new_table_name= { (char *) new_table, strlen(new_table) };
+    LEX_STRING old_table_name= LEX_STRING_FROM_CHARPTR(old_alias);
+    LEX_STRING new_table_name= LEX_STRING_FROM_CHARPTR(new_table);
     /*
       Since triggers should be in the same schema as their subject tables
       moving table with them between two schemas raises too many questions.

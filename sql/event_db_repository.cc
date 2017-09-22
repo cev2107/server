@@ -1013,7 +1013,7 @@ Event_db_repository::drop_schema_events(THD *thd, LEX_STRING schema)
     /* et_field may be NULL if the table is corrupted or out of memory */
     if (et_field)
     {
-      LEX_STRING et_field_lex= { et_field, strlen(et_field) };
+      LEX_STRING et_field_lex= LEX_STRING_FROM_CHARPTR(et_field);
       DBUG_PRINT("info", ("Current event %s name=%s", et_field,
                           get_field(thd->mem_root,
                                     table->field[ET_FIELD_NAME])));

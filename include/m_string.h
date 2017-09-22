@@ -211,7 +211,7 @@ extern ulonglong strtoull(const char *str, char **ptr, int base);
 #define STRING_WITH_LEN(X) (X), ((uint) (sizeof(X) - 1))
 #define USTRING_WITH_LEN(X) ((uchar*) X), ((uint) (sizeof(X) - 1))
 #define C_STRING_WITH_LEN(X) ((char *) (X)), ((uint) (sizeof(X) - 1))
-
+#define LEX_STRING_FROM_CHARPTR(X) {(char *)X, (uint)strlen(X)}
 struct st_mysql_const_lex_string
 {
   const char *str;

@@ -151,7 +151,7 @@ namespace feedback {
 */
 #define INSERT2(NAME,LEN,VALUE)                       \
   do {                                                \
-    table->field[0]->store(NAME, LEN, system_charset_info); \
+    table->field[0]->store(NAME, (uint)LEN, system_charset_info); \
     table->field[1]->store VALUE;                     \
     if (schema_table_store_record(thd, table))        \
       return 1;                                       \
@@ -159,7 +159,7 @@ namespace feedback {
 
 #define INSERT1(NAME,VALUE)                           \
   do {                                                \
-    table->field[0]->store(NAME, sizeof(NAME)-1, system_charset_info); \
+    table->field[0]->store(NAME, (uint)sizeof(NAME)-1, system_charset_info); \
     table->field[1]->store VALUE;                     \
     if (schema_table_store_record(thd, table))        \
       return 1;                                       \

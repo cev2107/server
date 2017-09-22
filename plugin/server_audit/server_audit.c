@@ -1104,7 +1104,7 @@ static void setup_connection_connect(struct connection_info *cn,
 }
 
 
-#define SAFE_STRLEN(s) (s ? strlen(s) : 0)
+#define SAFE_STRLEN(s) (s ? (unsigned int)strlen(s) : 0)
 static char empty_str[1]= { 0 };
 
 

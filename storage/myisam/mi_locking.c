@@ -608,7 +608,7 @@ int _mi_mark_file_changed(MI_INFO *info)
     {
       mi_int2store(buff,share->state.open_count);
       buff[2]=1;				/* Mark that it's changed */
-      DBUG_RETURN(mysql_file_pwrite(share->kfile, buff, sizeof(buff),
+      DBUG_RETURN((int)mysql_file_pwrite(share->kfile, buff, sizeof(buff),
                                     sizeof(share->state.header),
                                     MYF(MY_NABP)));
     }
@@ -637,7 +637,7 @@ int _mi_decrement_open_count(MI_INFO *info)
     {
       share->state.open_count--;
       mi_int2store(buff,share->state.open_count);
-      write_error= mysql_file_pwrite(share->kfile, buff, sizeof(buff),
+      write_error= (int)mysql_file_pwrite(share->kfile, buff, sizeof(buff),
                                      sizeof(share->state.header),
                                      MYF(MY_NABP));
     }

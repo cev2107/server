@@ -263,7 +263,7 @@ Event_basic::load_string_fields(Field **fields, ...)
       ret= TRUE;
       break;
     }
-    field_value->length= strlen(field_value->str);
+    field_value->length= (uint)strlen(field_value->str);
 
     field_name= (enum enum_events_table_field) va_arg(args, int);
   }
@@ -392,7 +392,7 @@ bool
 Event_job_data::load_from_row(THD *thd, TABLE *table)
 {
   char *ptr;
-  size_t len;
+  uint len;
   LEX_STRING tz_name;
 
   DBUG_ENTER("Event_job_data::load_from_row");
@@ -423,7 +423,7 @@ Event_job_data::load_from_row(THD *thd, TABLE *table)
   if (! ptr)
     ptr= definer.str;
 
-  len= ptr - definer.str;
+  len= (uint)(ptr - definer.str);
   definer_user.str= strmake_root(&mem_root, definer.str, len);
   definer_user.length= len;
   len= definer.length - len - 1;
@@ -431,7 +431,7 @@ Event_job_data::load_from_row(THD *thd, TABLE *table)
   definer_host.str= strmake_root(&mem_root, ptr + 1, len);
   definer_host.length= len;
 
-  sql_mode= (ulong) table->field[ET_FIELD_SQL_MODE]->val_int();
+  sql_mode= table->field[ET_FIELD_SQL_MODE]->val_int();
 
   DBUG_RETURN(FALSE);
 }

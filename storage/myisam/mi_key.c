@@ -27,7 +27,7 @@
 #define FIX_LENGTH(cs, pos, length, char_length)                            \
             do {                                                            \
               if (length > char_length)                                     \
-                char_length= my_charpos(cs, pos, pos+length, char_length);  \
+                char_length= (uint)my_charpos(cs, pos, pos+length, char_length);  \
               set_if_smaller(char_length,length);                           \
             } while(0)
 

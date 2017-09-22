@@ -468,7 +468,7 @@ public:
   bool append(const char *s);
   bool append(const LEX_STRING *ls) { return append(ls->str, (uint32)ls->length); }
   bool append(const LEX_CSTRING *ls) { return append(ls->str, (uint32)ls->length); }
-  bool append(const char *s, uint32 arg_length);
+  bool append(const char *s, size_t arg_length);
   bool append(const char *s, uint32 arg_length, CHARSET_INFO *cs);
   bool append_ulonglong(ulonglong val);
   bool append_longlong(longlong val);

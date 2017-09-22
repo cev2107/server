@@ -440,7 +440,7 @@ bool String::append(const String &s)
   Append an ASCII string to the a string of the current character set
 */
 
-bool String::append(const char *s,uint32 arg_length)
+bool String::append(const char *s, size_t arg_length)
 {
   if (!arg_length)
     return FALSE;
