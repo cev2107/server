@@ -51,7 +51,7 @@ static int auth(MYSQL_PLUGIN_VIO *vio, MYSQL_SERVER_AUTH_INFO *info)
   info->password_used= PASSWORD_USED_YES;
 
   /* prepare random nonce */
-  if (my_random_bytes(nonce, sizeof(nonce)))
+  if (my_random_bytes((unsigned char *)nonce, sizeof(nonce)))
      return CR_AUTH_HANDSHAKE;
 
   /* send it */
