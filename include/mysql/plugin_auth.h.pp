@@ -267,7 +267,7 @@ void my_sha512_result(void *context, unsigned char *digest);
 struct st_mysql_lex_string
 {
   char *str;
-  size_t length;
+  unsigned int length;
 };
 typedef struct st_mysql_lex_string MYSQL_LEX_STRING;
 extern struct thd_alloc_service_st {
