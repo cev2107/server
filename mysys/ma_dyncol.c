@@ -1091,7 +1091,7 @@ dynamic_column_string_read(DYNAMIC_COLUMN_VALUE *store_it_here,
   if (store_it_here->x.string.charset == NULL)
     return ER_DYNCOL_UNKNOWN_CHARSET;
   data+= len;
-  store_it_here->x.string.value.length= (length-= len);
+  store_it_here->x.string.value.length= (uint)(length - len);
   store_it_here->x.string.value.str= (char*) data;
   return ER_DYNCOL_OK;
 }
@@ -1112,7 +1112,7 @@ dynamic_column_dyncol_read(DYNAMIC_COLUMN_VALUE *store_it_here,
                            uchar *data, size_t length)
 {
   store_it_here->x.string.charset= &my_charset_bin;
-  store_it_here->x.string.value.length= length;
+  store_it_here->x.string.value.length= (uint)length;
   store_it_here->x.string.value.str= (char*) data;
   return ER_DYNCOL_OK;
 }
@@ -2014,13 +2014,13 @@ static my_bool read_name(DYN_HEADER *hdr, uchar *entry, LEX_STRING *name)
 
   name->str= (char *)hdr->nmpool + nmoffset;
   if (next_entry == hdr->header + hdr->header_size)
-    name->length= hdr->nmpool_size - nmoffset;
+    name->length= (uint)(hdr->nmpool_size - nmoffset);
   else
   {
     size_t next_nmoffset= uint2korr(next_entry);
     if (next_nmoffset > hdr->nmpool_size)
       return 1;
-    name->length= next_nmoffset - nmoffset;
+    name->length= (uint)(next_nmoffset - nmoffset);
   }
   return 0;
 }
@@ -2119,7 +2119,7 @@ find_column(DYN_HEADER *hdr, uint numkey, LEX_STRING *strkey)
   else if (hdr->format == dyncol_fmt_str && strkey == NULL)
   {
     nmkey.str= backwritenum(nmkeybuff + sizeof(nmkeybuff), numkey);
-    nmkey.length= (nmkeybuff + sizeof(nmkeybuff)) - nmkey.str;
+    nmkey.length= (uint)((nmkeybuff + sizeof(nmkeybuff)) - nmkey.str);
     strkey= &nmkey;
   }
   if (hdr->format == dyncol_fmt_num)
@@ -2529,8 +2529,8 @@ mariadb_dyncol_list_named(DYNAMIC_COLUMN *str, uint *count, LEX_STRING **names)
       uint nm= uint2korr(read);
       (*names)[i].str= pool;
       pool+= DYNCOL_NUM_CHAR;
-      (*names)[i].length=
-        longlong2str(nm, (*names)[i].str, 10) - (*names)[i].str;
+      (*names)[i].length=(uint)(
+        longlong2str(nm, (*names)[i].str, 10) - (*names)[i].str);
     }
     else
     {
@@ -2590,7 +2590,7 @@ find_place(DYN_HEADER *hdr, void *key, my_bool string_keys)
       if (need_conversion)
       {
         str.str= backwritenum(buff + sizeof(buff), uint2korr(hdr->entry));
-        str.length= (buff + sizeof(buff)) - str.str;
+        str.length= (uint)(buff + sizeof(buff) - str.str);
       }
       else
       {
@@ -2618,7 +2618,7 @@ find_place(DYN_HEADER *hdr, void *key, my_bool string_keys)
       if (need_conversion)
       {
         str.str= backwritenum(buff + sizeof(buff), uint2korr(hdr->entry));
-        str.length= (buff + sizeof(buff)) - str.str;
+        str.length= (uint)(buff + sizeof(buff) - str.str);
       }
       else
       {
@@ -2779,7 +2779,7 @@ dynamic_column_update_copy(DYNAMIC_COLUMN *str, PLAN *plan,
         if (convert)
         {
           name.str= backwritenum(buff + sizeof(buff), uint2korr(read));
-          name.length= (buff + sizeof(buff)) - name.str;
+          name.length= (uint)((buff + sizeof(buff)) - name.str);
           key= &name;
         }
         else

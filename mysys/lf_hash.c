@@ -91,7 +91,7 @@ static int l_find(LF_SLIST * volatile *head, CHARSET_INFO *cs, uint32 hashnr,
 {
   uint32       cur_hashnr;
   const uchar  *cur_key;
-  uint         cur_keylen;
+  size_t        cur_keylen;
   intptr       link;
 
   DBUG_ASSERT(!cs || !callback);        /* should not be set both */
@@ -176,7 +176,7 @@ static LF_SLIST *l_insert(LF_SLIST * volatile *head, CHARSET_INFO *cs,
 
   for (;;)
   {
-    if (l_find(head, cs, node->hashnr, node->key, node->keylen,
+    if (l_find(head, cs, node->hashnr, node->key, (uint)node->keylen,
               &cursor, pins, 0) &&
         (flags & LF_HASH_UNIQUE))
     {

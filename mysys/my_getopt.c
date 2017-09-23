@@ -827,7 +827,7 @@ static int setval(const struct my_option *opts, void *value, char *argument,
         *((ulonglong*)value)=
               find_set_from_flags(opts->typelib, opts->typelib->count, 
                                   *(ulonglong *)value, opts->def_value,
-                                  argument, strlen(argument),
+                                  argument, (uint)strlen(argument),
                                   &error, &error_len);
         if (error)
         {
@@ -1394,7 +1394,7 @@ static void init_variables(const struct my_option *options,
 }
 
 /** Prints variable or option name, replacing _ with - */
-static uint print_name(const struct my_option *optp)
+static size_t print_name(const struct my_option *optp)
 {
   const char *s= optp->name;
 
@@ -1441,7 +1441,7 @@ static uint print_comment(const char *comment,
       putchar(' ');
   }
   printf("%s", comment);
-  return curpos + (end - comment);
+  return (uint)(curpos + (end - comment));
 }
 
 
@@ -1475,7 +1475,7 @@ void my_print_help(const struct my_option *options)
     if (strlen(optp->name))
     {
       printf("--");
-      col+= 2 + print_name(optp);
+      col+= 2 + (uint)print_name(optp);
       if (optp->arg_type == NO_ARG ||
 	  (optp->var_type & GET_TYPE_MASK) == GET_BOOL)
       {
@@ -1567,7 +1567,8 @@ void my_print_help(const struct my_option *options)
 
 void my_print_variables(const struct my_option *options)
 {
-  uint name_space= 34, length, nr;
+  size_t name_space= 34, length;
+  uint nr;
   ulonglong llvalue;
   char buff[255];
   const struct my_option *optp;
@@ -1581,7 +1582,7 @@ void my_print_variables(const struct my_option *options)
   }
 
   printf("\nVariables (--variable-name=value)\n");
-  printf("%-*s%s", name_space, "and boolean options {FALSE|TRUE}",
+  printf("%-*s%s", (int)name_space, "and boolean options {FALSE|TRUE}",
          "Value (after reading options)\n");
   for (length=1; length < 75; length++)
     putchar(length == name_space ? ' ' : '-');
