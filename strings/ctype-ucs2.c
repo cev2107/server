@@ -1051,7 +1051,7 @@ static void
 my_fill_mb2(CHARSET_INFO *cs, char *s, size_t slen, int fill)
 {
   char buf[10], *last;
-  int buflen, remainder;
+  size_t buflen, remainder;
 
   DBUG_ASSERT((slen % 2) == 0);
 
@@ -1066,7 +1066,7 @@ my_fill_mb2(CHARSET_INFO *cs, char *s, size_t slen, int fill)
   for (last= s + slen - buflen; s <= last; s+= buflen)
   {
     /* Enough space for the characer */
-    memcpy(s, buf, (size_t) buflen);
+    memcpy(s, buf, buflen);
   }
 
   /* 
@@ -1074,11 +1074,11 @@ my_fill_mb2(CHARSET_INFO *cs, char *s, size_t slen, int fill)
     for the whole multibyte character, then add trailing zeros.
   */
   if ((remainder= last + buflen - s) > 0)
-    bzero(s, (size_t) remainder);
+    bzero(s, remainder);
 }
 
 
-static int
+static size_t
 my_vsnprintf_mb2(char *dst, size_t n, const char* fmt, va_list ap)
 {
   char *start=dst, *end= dst + n - 1;
@@ -2327,7 +2327,7 @@ my_charlen_utf32(CHARSET_INFO *cs __attribute__((unused)),
 /* Defines my_well_formed_char_length_utf32 */
 
 
-static int
+static size_t
 my_vsnprintf_utf32(char *dst, size_t n, const char* fmt, va_list ap)
 {
   char *start= dst, *end= dst + n;
@@ -2412,7 +2412,7 @@ my_vsnprintf_utf32(char *dst, size_t n, const char* fmt, va_list ap)
   *dst++= '\0';
   *dst++= '\0';
   *dst++= '\0';     /* End of errmessage */
-  return (size_t) (dst - start - 4);
+  return (uint) (dst - start - 4);
 }
 
 

@@ -77,7 +77,7 @@ size_t my_strnxfrm_simple_internal(CHARSET_INFO * cs,
 {
   const uchar *map= cs->sort_order;
   uchar *d0= dst;
-  uint frmlen;
+  size_t frmlen;
   if ((frmlen= MY_MIN(dstlen, *nweights)) > srclen)
     frmlen= srclen;
   if (dst != src)
@@ -92,7 +92,7 @@ size_t my_strnxfrm_simple_internal(CHARSET_INFO * cs,
     for (end= dst + frmlen; dst < end; dst++)
       *dst= map[(uchar) *dst];
   }
-  *nweights-= frmlen;
+  *nweights-= (uint)frmlen;
   return dst - d0;
 }
 
@@ -321,7 +321,7 @@ size_t my_snprintf_8bit(CHARSET_INFO *cs  __attribute__((unused)),
 		     const char* fmt, ...)
 {
   va_list args;
-  int result;
+  size_t result;
   va_start(args,fmt);
   result= my_vsnprintf(to, n, fmt, args);
   va_end(args);
@@ -1226,13 +1226,13 @@ skip:
 	if (nmatch > 0)
 	{
 	  match[0].beg= 0;
-	  match[0].end= (size_t) (str- (const uchar*)b-1);
+	  match[0].end= (uint)(str- (const uchar*)b-1);
 	  match[0].mb_len= match[0].end;
 	  
 	  if (nmatch > 1)
 	  {
 	    match[1].beg= match[0].end;
-	    match[1].end= match[0].end+s_length;
+	    match[1].end= match[0].end+(uint)s_length;
 	    match[1].mb_len= match[1].end-match[1].beg;
 	  }
 	}
@@ -1703,7 +1703,7 @@ my_strntoull10rnd_8bit(CHARSET_INFO *cs __attribute__((unused)),
     /* Unknown character, exit the loop */
     break; 
   }
-  shift= dot ? dot - str : 0; /* Right shift */
+  shift= dot ? (int)(dot - str) : 0; /* Right shift */
   addon= 0;
 
 exp:    /* [ E [ <sign> ] <unsigned integer> ] */
@@ -2012,14 +2012,14 @@ my_strxfrm_pad_desc_and_reverse(CHARSET_INFO *cs,
 {
   if (nweights && frmend < strend && (flags & MY_STRXFRM_PAD_WITH_SPACE))
   {
-    uint fill_length= MY_MIN((uint) (strend - frmend), nweights * cs->mbminlen);
+    size_t fill_length= MY_MIN((uint) (strend - frmend), nweights * cs->mbminlen);
     cs->cset->fill(cs, (char*) frmend, fill_length, cs->pad_char);
     frmend+= fill_length;
   }
   my_strxfrm_desc_and_reverse(str, frmend, flags, level);
   if ((flags & MY_STRXFRM_PAD_TO_MAXLEN) && frmend < strend)
   {
-    uint fill_length= strend - frmend;
+    size_t fill_length= strend - frmend;
     cs->cset->fill(cs, (char*) frmend, fill_length, cs->pad_char);
     frmend= strend;
   }
@@ -2034,14 +2034,14 @@ my_strxfrm_pad_desc_and_reverse_nopad(CHARSET_INFO *cs,
 {
   if (nweights && frmend < strend && (flags & MY_STRXFRM_PAD_WITH_SPACE))
   {
-    uint fill_length= MY_MIN((uint) (strend - frmend), nweights * cs->mbminlen);
+    size_t fill_length= MY_MIN((uint) (strend - frmend), nweights * cs->mbminlen);
     memset(frmend, 0x00, fill_length);
     frmend+= fill_length;
   }
   my_strxfrm_desc_and_reverse(str, frmend, flags, level);
   if ((flags & MY_STRXFRM_PAD_TO_MAXLEN) && frmend < strend)
   {
-    uint fill_length= strend - frmend;
+    size_t fill_length= strend - frmend;
     memset(frmend, 0x00, fill_length);
     frmend= strend;
   }

@@ -528,12 +528,12 @@ uint my_instr_mb(CHARSET_INFO *cs,
         if (nmatch)
         {
           match[0].beg= 0;
-          match[0].end= (size_t) (b-b0);
+          match[0].end=(uint) (b-b0);
           match[0].mb_len= res;
           if (nmatch > 1)
           {
             match[1].beg= match[0].end;
-            match[1].end= match[0].end+s_length;
+            match[1].end= match[0].end+(uint)s_length;
             match[1].mb_len= 0;	/* Not computed */
           }
         }
@@ -627,7 +627,7 @@ size_t my_strnxfrm_mb_internal(CHARSET_INFO *cs, uchar *dst, uchar *de,
   */
   for (; src < se && *nweights && dst < de; (*nweights)--)
   {
-    int chlen;
+    size_t chlen;
     if (*src < 128 || !(chlen= my_ismbchar(cs, (const char *) src,
                                                (const char *) se)))
     {
@@ -637,7 +637,7 @@ size_t my_strnxfrm_mb_internal(CHARSET_INFO *cs, uchar *dst, uchar *de,
     else
     {
       /* Multi-byte character */
-      int len= (dst + chlen <= de) ? chlen : de - dst;
+      size_t len= (dst + chlen <= de) ? chlen : de - dst;
       memcpy(dst, src, len);
       dst+= len;
       src+= len;

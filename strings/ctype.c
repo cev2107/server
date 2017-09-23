@@ -831,7 +831,7 @@ my_parse_charset_xml(MY_CHARSET_LOADER *loader, const char *buf, size_t len)
 
 
 uint
-my_string_repertoire_8bit(CHARSET_INFO *cs, const char *str, ulong length)
+my_string_repertoire_8bit(CHARSET_INFO *cs, const char *str, size_t length)
 {
   const char *strend;
   if ((cs->state & MY_CS_NONASCII) && length > 0)
